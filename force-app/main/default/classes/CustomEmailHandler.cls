@@ -8,7 +8,7 @@ public class CustomEmailHandler implements Messaging.InboundEmailHandler {
             String emailBody = email.plainTextBody;
 
             // Define the regex pattern to extract the access code
-            String regexPattern = '(?i)Código de acceso al sistema de escaneo interplanetario:\\s*([A-Za-z0-9-]+)';
+            String regexPattern = '(?i)Código de acceso al sistema de escaneo interplanetario:\\s*([A-Za-z0-9@-]+)';
 
             // Find the access code using the regex pattern
             Pattern pattern = Pattern.compile(regexPattern);
@@ -52,6 +52,21 @@ public class CustomEmailHandler implements Messaging.InboundEmailHandler {
                     );
 
                     insert newCase;
+
+                    
+                    // Publish a message
+                    New_Case__e nce = New New_Case__e(Case_Id__c = newCase.Id);
+                    Database.SaveResult sr = EventBus.publish(nce);
+                    if (sr.isSuccess()) {
+                        System.debug('Successfully published event.');
+                    } else {
+                        for(Database.Error err : sr.getErrors()) {
+                            System.debug('Error returned: ' +
+                                        err.getStatusCode() +
+                                        ' - ' +
+                                        err.getMessage());
+                        }
+                    }
 
                     // Return the success message to the sender
                     result.success = true;
