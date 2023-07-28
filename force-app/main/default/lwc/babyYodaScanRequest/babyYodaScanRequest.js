@@ -1,6 +1,7 @@
 import { LightningElement, track, wire, api } from 'lwc';
 import { refreshApex } from '@salesforce/apex';
 import {  subscribe, unsubscribe, MessageContext } from 'lightning/empApi';
+import { NavigationMixin } from 'lightning/navigation';
 import getOldestCasesAssignedToUser from '@salesforce/apex/CaseController.getOldestCasesAssignedToUser';
 
 const columns = [
@@ -11,7 +12,13 @@ const columns = [
     { label: 'Más Información', type: 'button', typeAttributes: { label: 'Ver', name: 'ver', title: 'Ver', variant: 'base', }, },
 ];
 
-export default class CasosInterplanetarios extends LightningElement {
+export default class CasosInterplanetarios extends NavigationMixin(LightningElement) {
+    /*@api caseSubject;
+    @api caseStatus;
+    @api planetCode;
+    @api successfulScan;
+    @api NavigationMixin;*/
+    
     @track caseData = [];
     @track error;
 
@@ -87,12 +94,17 @@ export default class CasosInterplanetarios extends LightningElement {
         this[NavigationMixin.Navigate]({
             type: 'standard__component',
             attributes: {
-                componentName: 'c__CaseViewer', // Replace 'CaseViewer' with the actual name of your case viewer LWC
+                componentName: 'c__caseViewer', // Replace 'CaseViewer' with the actual name of your case viewer LWC
             },
             state: {
                 c__caseId: caseId,
             },
         });
+    }
+
+    // Handle the 'closecase' event to refresh the table
+    handleCaseClose() {
+        this.refreshTable();
     }
 
     /*refreshTable() {
