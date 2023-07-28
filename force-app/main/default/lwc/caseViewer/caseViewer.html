@@ -1,15 +1,11 @@
 <template>
-    <div class="slds-m-around_medium">
-        <lightning-card title={caseSubject} icon-name="standard:case">
-            <div class="slds-m-around_medium">
-                <p><b>Asunto:</b> {caseSubject}</p>
-                <p><b>Estado:</b> {caseStatus}</p>
-                <p><b>Código de acceso:</b> {planetCode}</p>
-                <p><b>Escaneo exitoso:</b> {successfulScan}</p>
-            </div>
-            <div class="slds-m-around_medium">
-                <lightning-button label="Escaneo interplanetario" variant="brand" onclick={performInterplanetaryScan}></lightning-button>
-            </div>
-        </lightning-card>
-    </div>
+    <lightning-card title="Detalle del caso" icon-name="standard:case">
+        <div class="slds-m-around_medium">
+            <p><b>Asunto:</b> {caseSubject}</p>
+            <p><b>Estado:</b> {caseStatus}</p>
+            <p><b>Código de acceso:</b> {planetCode}</p>
+            <p><b>Escaneo exitoso:</b> {successfulScan}</p>
+            <lightning-button label="Escaneo interplanetario" variant="brand" onclick={Scan}></lightning-button>
+        </div>
+    </lightning-card>
 </template>

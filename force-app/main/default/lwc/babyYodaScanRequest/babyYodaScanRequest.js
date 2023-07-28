@@ -21,6 +21,8 @@ export default class CasosInterplanetarios extends NavigationMixin(LightningElem
     
     @track caseData = [];
     @track error;
+    @track selectedCase;
+    @track viewDetails = false;
 
     wiredResult;
 
@@ -34,6 +36,7 @@ export default class CasosInterplanetarios extends NavigationMixin(LightningElem
                 Status: caseRecord.Status,
                 ContactEmail: caseRecord.Contact.Email,
                 ContactName: caseRecord.Contact.Name,
+                PlanetCode: caseRecord.Planet__r.PlanetCode__c,
                 ContactId: 'theksquaregroup25-dev-ed.develop.lightning.force.com/lightning/r/Contact/' + caseRecord.Contact.Id + '/view',
             }));
             this.error = undefined;
@@ -65,9 +68,9 @@ export default class CasosInterplanetarios extends NavigationMixin(LightningElem
 
             var obj = JSON.parse(JSON.stringify(response));
 
-            self.data = self.proxyToObj(self.data);
-            self.data.push({Case_Id__c : obj.data.payload.Case_Id__c});
-            console.log('this.data -> ' + JSON.stringify(self.data));
+            self.caseData = self.proxyToObj(self.data);
+            self.caseData.push({Case_Id__c : obj.data.payload.Case_Id__c});
+            console.log('this.data -> ' + JSON.stringify(self.caseData));
         };
  
         subscribe(this.channelName, -1, messageCallback).then(response => {
@@ -76,40 +79,29 @@ export default class CasosInterplanetarios extends NavigationMixin(LightningElem
         });
     }
 
-
-
     handleRowAction(event) {
         // Handle row action - navigate to the particular case viewer LWC component using the caseId
         const action = event.detail.action;
         const caseId = event.detail.row.Id;
+        this.selectedCase = event.detail.row; // Store the selected case details
+
         if (action.name === 'ver') {
-            // Navigate to the case viewer LWC passing the caseId as a parameter
-            this.navigateToCaseViewer(caseId);
+            // Show the case viewer component by setting viewDetails to true
+            this.viewDetails = true;
         }
-        
     }
 
-    navigateToCaseViewer(caseId) {
-        // Use navigation service to navigate to the case viewer LWC
-        this[NavigationMixin.Navigate]({
-            type: 'standard__component',
-            attributes: {
-                componentName: 'c__caseViewer', // Replace 'CaseViewer' with the actual name of your case viewer LWC
-            },
-            state: {
-                c__caseId: caseId,
-            },
-        });
-    }
-
-    // Handle the 'closecase' event to refresh the table
     handleCaseClose() {
+        // This method will be called from the child component when the scan is completed
+        // Set viewDetails back to false to hide the case viewer component
+        this.viewDetails = false;
+
+        // Refresh the table data after the scan is completed
         this.refreshTable();
     }
 
-    /*refreshTable() {
+    refreshTable() {
         // Call the Apex method to refresh the data and update the table
-        //console.log('im here');
         return refreshApex(this.wiredCases);
-    }*/
+    }
 }

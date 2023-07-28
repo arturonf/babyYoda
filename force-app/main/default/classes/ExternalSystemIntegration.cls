@@ -26,6 +26,7 @@ public class ExternalSystemIntegration {
         }
     }
 
+    @AuraEnabled
     public static void findBabyYoda(Id caseId) {
         Case testCase = [SELECT Id, Subject, Planet__c, Successful_Scan__c FROM Case WHERE Id = :caseId];
         if (testCase != null && testCase.Planet__c != null) {

@@ -9,5 +9,13 @@
         show-row-number-column
       ></lightning-datatable>
     </lightning-card>
+    <template if:true={viewDetails}>
+        <c-case-viewer
+            case-subject={selectedCase.Subject}
+            case-status={selectedCase.Status}
+            planet-code={selectedCase.PlanetCode}
+            successful-scan={successfulScan}
+        ></c-case-viewer>
+    </template>
   </template>
   
