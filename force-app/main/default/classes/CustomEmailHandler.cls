@@ -24,11 +24,30 @@ public class CustomEmailHandler implements Messaging.InboundEmailHandler {
                 if (!planets.isEmpty()) {
                     Planet__c planet = planets[0];
 
-                    // Create the case with the related planet information
+                    // Check if there is a contact with the email address from the inbound email
+                    List<Contact> relatedContacts = [SELECT Id FROM Contact WHERE Email = :email.fromAddress LIMIT 1];
+                    Contact relatedContact = null;
+                    if(relatedContacts.size() == 1){
+                        relatedContact = relatedContacts[0];
+                    }
+
+                    // Create a new contact if one does not exist
+                    if (relatedContact == null) {
+                        relatedContact = new Contact(
+                            LastName = 'Unknown', // Set a default last name for the contact
+                            Email = email.fromAddress
+                        );
+                        insert relatedContact;
+                    }
+
+                    // Create the case with the related planet and contact information
                     Case newCase = new Case(
                         Subject = emailSubject,
                         Description = emailBody,
                         Planet__c = planet.Id,
+                        ContactId = relatedContact.Id, // Link the case to the related contact
+                        SuppliedEmail = email.fromAddress,
+                        Origin = 'Email',
                         Status = 'New' // Set the appropriate initial status for the case
                     );
 
