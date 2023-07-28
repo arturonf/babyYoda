@@ -8,7 +8,7 @@ const columns = [
     { label: 'Estado', fieldName: 'Status', type: 'text', sortable: true },
     { label: 'Email de contacto', fieldName: 'ContactEmail', type: 'email', sortable: true },
     { label: 'Contacto relacionado', fieldName: 'ContactId', type: 'url', sortable: true , typeAttributes:{label: { fieldName: 'ContactName' }, target: '_blank'} },
-    { label: 'View Case', type: 'button', typeAttributes: { label: 'View Case', name: 'view_case', title: 'View Case', variant: 'base', }, },
+    { label: 'Más Información', type: 'button', typeAttributes: { label: 'Ver', name: 'ver', title: 'Ver', variant: 'base', }, },
 ];
 
 export default class CasosInterplanetarios extends LightningElement {
@@ -75,7 +75,7 @@ export default class CasosInterplanetarios extends LightningElement {
         // Handle row action - navigate to the particular case viewer LWC component using the caseId
         const action = event.detail.action;
         const caseId = event.detail.row.Id;
-        if (action.name === 'view_case') {
+        if (action.name === 'ver') {
             // Navigate to the case viewer LWC passing the caseId as a parameter
             this.navigateToCaseViewer(caseId);
         }
