@@ -1,3 +1,13 @@
 <template>
-    
-</template>
+    <lightning-card title="Casos interplanetarios" icon-name="standard:case">
+      <lightning-datatable
+        key-field="Id"
+        data={caseData}
+        columns={columns}
+        onrowaction={handleRowAction}
+        hide-checkbox-column
+        show-row-number-column
+      ></lightning-datatable>
+    </lightning-card>
+  </template>
+  
